@@ -23,6 +23,7 @@
 #define BOMBERMAN2 	7
 #define BOMBA 		8
 #define MAPA        9
+#define CURSOR      10
 
 #define EMOJI_VIDA	printf("💙");
 #define EMOJI_PARE	printf("🧱");
@@ -35,7 +36,8 @@
 #define EMOJI_BOM1  printf("🙂");
 #define EMOJI_BOM2  printf("😃");
 #define EMOJI_BOM3  printf("🤕");
-#define EMOJI_MAPA  printf("🎴");
+#define EMOJI_MAPA  printf("🧱");
+#define EMOJI_CURS  printf("🔧");
 //⏯ 
 
 int map[ALT][LAR] = {
