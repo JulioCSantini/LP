@@ -22,7 +22,7 @@ typedef struct{
 
 Jogo tab;
 
-int  pl=1, pc=1, ca=1, cl=1, mat[ALT][LAR], armazena= PAREDE, aux = 0;
+int  pl=1, pc=1, ca=1, cl=1, mat[ALT][LAR], armazena= PAREDE, aux = 0, pos;
 int czumbi=0, cvida=0, cmons=0, crobo=0, cbomb=0;
 
 
@@ -34,6 +34,9 @@ void editarMapa(int);
 void salvarMapa();
 int condicao(int op);
 int contagem(int cont);
+void movimentoMonstros();
+
+
 
 
 
@@ -87,8 +90,11 @@ void exibirMapa(){
     printf("\n VIDAS %d/3\t ZUMBIS %d/3\t MONSTROS %d/3\t ROBOS %d/3", cvida, czumbi, cmons, crobo);
 }
 void atualizarMapa(int mov) {
+    
+    srand(time(NULL));
+
     if (mov == CIMA) {
-        if (pl > 0 && map[pl - 1][pc] != PAREDE) {
+        if (pl > 0 && map[pl - 1][pc] == CAMINHO) {
             map[pl][pc] = CAMINHO;
             pl--;
             if(map[pl][pc] == VIDA){
@@ -97,7 +103,7 @@ void atualizarMapa(int mov) {
             map[pl][pc] = BOMBERMAN;
         }
     } else if (mov == BAIXO) {
-        if (pl < ALT - 1 && map[pl + 1][pc] != PAREDE) {
+        if (pl < ALT - 1 && map[pl + 1][pc] == CAMINHO) {
             map[pl][pc] = CAMINHO;
             pl++;
             if(map[pl][pc] == VIDA){
@@ -106,7 +112,7 @@ void atualizarMapa(int mov) {
             map[pl][pc] = BOMBERMAN;
         }
     } else if (mov == ESQUERDA) {
-        if (pc > 0 && map[pl][pc - 1] != PAREDE) {
+        if (pc > 0 && map[pl][pc - 1] == CAMINHO) {
             map[pl][pc] = CAMINHO;
             pc--;
             if(map[pl][pc] == VIDA){
@@ -115,7 +121,7 @@ void atualizarMapa(int mov) {
             map[pl][pc] = BOMBERMAN;
         }
     } else if (mov == DIREITA) {
-        if (pc < LAR - 1 && map[pl][pc + 1] != PAREDE) {
+        if (pc < LAR - 1 && map[pl][pc + 1] == CAMINHO) {
             map[pl][pc] = CAMINHO;
             pc++;
             if(map[pl][pc] == VIDA){
@@ -124,6 +130,7 @@ void atualizarMapa(int mov) {
             map[pl][pc] = BOMBERMAN;
         }
     }
+    
 }
 
 void iniciarMapa(){
@@ -248,8 +255,26 @@ int condicao(int op){
 void salvarMapa(){
     FILE *mapinhas = fopen("mapas.bin", "a+");
 
+    printf("\n\n\noi\n\n\n");
+
+    tab.numVida = contagem(VIDA);
+    tab.numMonstros = contagem(MONSTRO);
+    tab.numRobo = contagem(ROBO);
+    tab.numZumbi = contagem(ZUMBI);
+
+    printf("%i", tab.numRobo);
+
     fwrite(&tab,sizeof(Jogo),1,mapinhas);
     fclose(mapinhas);
+
+    for(int i = 0; i< ALT; i++){
+        for(int j =0; j<LAR; j++){
+            tab.mapa[i][j] = PAREDE;
+        }
+    }
+    ca=1;
+    cl=1;
+
 }
 int contagem(int cont){
     aux = 0;
@@ -261,6 +286,85 @@ int contagem(int cont){
         }
     }
     return aux;
+}
+
+void movimentoMonstros(){
+    srand(time(NULL));
+    for (int i = 0; i < ALT; i++)
+    {
+        for (int j = 0; j < LAR; j++)
+        {
+            int dire = rand()%4;
+            if(map[i][j] == ZUMBI){
+                if (dire == 0 && map[i][j] == CAMINHO)
+                {
+                    map[i - 1][j] = ZUMBI;
+                    map[i][j] = CAMINHO;
+                }
+                else if(dire == 1 && map[i][j] == CAMINHO)
+                {
+                    map[i + 1][j] = ZUMBI;
+                    map[i][j] = CAMINHO;
+                }
+                else if(dire == 2 && map[i][j] == CAMINHO)
+                {
+                    map[i][j - 1] = ZUMBI;
+                    map[i][j] = CAMINHO;
+                }
+                else if(dire == 3 && map[i][j] == CAMINHO)
+                {
+                    map[i][j + 1] = ZUMBI;
+                    map[i][j] = CAMINHO;
+                }
+            }
+            if(map[i][j] == MONSTRO){
+                if (dire == 0)
+                {
+                    map[i - 1][j] = MONSTRO;
+                    map[i][j] = CAMINHO;
+                }
+                else if(dire == 1)
+                {
+                    map[i + 1][j] = MONSTRO;
+                    map[i][j] = CAMINHO;
+                }
+                else if(dire == 2)
+                {
+                    map[i][j - 1] = MONSTRO;
+                    map[i][j] = CAMINHO;
+                }
+                else if(dire == 3)
+                {
+                    map[i][j + 1] = MONSTRO;
+                    map[i][j] = CAMINHO;
+                }
+            }
+            if(map[i][j] == ROBO){
+                if (dire == 0 && map[i - 1][j] == CAMINHO)
+                {
+                    map[i - 1][j] = ROBO;
+                    map[i][j] = CAMINHO;
+                }
+                else if(dire == 1 && map[i + 1][j] == CAMINHO)
+                {
+                    map[i + 1][j] = ROBO;
+                    map[i][j] = CAMINHO;
+                }
+                else if(dire == 2 && map[i][j - 1] == CAMINHO)
+                {
+                    map[i][j - 1] = ROBO;
+                    map[i][j] = CAMINHO;
+                }
+                else if(dire == 3 && map[i][j + 1] == CAMINHO)
+                {
+                    map[i][j + 1] = ROBO;
+                    map[i][j] = CAMINHO;
+                }
+            }
+        }
+        
+    }
+    
 }
 
 #endif
