@@ -4,6 +4,7 @@
 
 int main() {
 
+
   int op, pmenu;
 
   for(int i = 0; i<ALT; i++){
@@ -14,6 +15,7 @@ int main() {
   op = 0;
   pmenu = 1;
   while(op != -1) {
+    printf("teste 2\n\n\n");
     menuPrincipal(pmenu);
     // CAPTURA TECLA DIGITADA
     op = getTecla();
@@ -29,6 +31,7 @@ int main() {
                 system("clear");
                 exibirMapa();
                 op = getTecla();
+                movimentoMonstros();
                 atualizarMapa(op);
             }
             break;
@@ -40,13 +43,13 @@ int main() {
             op = getTecla();
             if(op == 115 || op == 83){
               salvarMapa();
-              break;
+              break; 
             }
             else{
               editarMapa(op);
             }
           }
-            break;
+          break;
         // CARREGAR MAPA
         case 3:
             printf("CARREGAR MAPA");
@@ -60,12 +63,11 @@ int main() {
             op = -1;
             break;
       }
-
-      if(pmenu != 5) {
+      /*if(pmenu != 5) {
         fflush(stdout);
         __fpurge(stdin);
         getchar();
-      }
+      }*/
     }
 
     if(pmenu > 5) pmenu = 1;
