@@ -8,10 +8,9 @@ int main() {
 
   for(int i = 0; i<ALT; i++){
     for(int j = 0; j<LAR; j++){
-      mat[i][j] = MAPA;
+      tab.mapa[i][j] = PAREDE;
     }
   }
-
   op = 0;
   pmenu = 1;
   while(op != -1) {
@@ -39,7 +38,13 @@ int main() {
             system("clear");
             iniciarMapa();
             op = getTecla();
-            editarMapa(op);
+            if(op == 115 || op == 83){
+              salvarMapa();
+              break;
+            }
+            else{
+              editarMapa(op);
+            }
           }
             break;
         // CARREGAR MAPA
