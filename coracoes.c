@@ -25,7 +25,7 @@ int main(void)
     {
         printf("\nPontos: %i", pontos);
         printf("\nJogada: ");
-        scanf("%i %i", &lin, &col);
+        scanf("%i %i", lin, &col);
         pontos = efetuarJogada(matriz, lin, col, pontos);
         exibirCenario(matriz);
     }
