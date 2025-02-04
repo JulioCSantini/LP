@@ -31,7 +31,7 @@ int main() {
                 system("clear");
                 exibirMapa();
                 op = getTecla();
-                movimentoMonstros();
+                //movimentoMonstros();
                 atualizarMapa(op);
             }
             break;
@@ -63,11 +63,11 @@ int main() {
             op = -1;
             break;
       }
-      /*if(pmenu != 5) {
+      if(pmenu != 5) {
         fflush(stdout);
         __fpurge(stdin);
         getchar();
-      }*/
+      }
     }
 
     if(pmenu > 5) pmenu = 1;
