@@ -31,28 +31,24 @@ int main() {
                 system("clear");
                 exibirMapa();
                 op = getTecla();
-                //movimentoMonstros();
                 atualizarMapa(op);
             }
             break;
         // EDITAR MAPA
         case 2:
-          while (1){
+          while (sair == 1){
             system("clear");
             iniciarMapa();
             op = getTecla();
-            if(op == 115 || op == 83){
-              salvarMapa();
-              break; 
-            }
-            else{
-              editarMapa(op);
-            }
+            editarMapa(op);
           }
+          sair = 1;
           break;
         // CARREGAR MAPA
         case 3:
-            printf("CARREGAR MAPA");
+            printf("7\n");
+            carregarMapas(op);
+            printf("8\n");
             break;
         // CONTINUAR GAME
         case 4:
