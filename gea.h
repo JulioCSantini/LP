@@ -18,13 +18,13 @@ typedef struct
     int numMonstros;
     int numRobo;
     int numBorbeman;
-    int tempo;
+    long int tempo;
 } Jogo;
 
 Jogo tab;
 
 int pl = 1, pc = 1, ca = 1, cl = 1, mat[ALT][LAR], armazena = PAREDE, aux = 0, pos, saida;
-int czumbi = 0, cvida = 0, cmons = 0, crobo = 0, cbomb = 0;
+int czumbi = 0, cvida = 0, cmons = 0, crobo = 0, cbomb = 0, sair = 1;
 
 void menuPrincipal(int op);
 void exibirMapa();
@@ -35,6 +35,7 @@ void salvarMapa();
 int condicao(int op);
 int contagem(int cont);
 void movimentoMonstros();
+void carregarMapas(int op);
 
 void menuPrincipal(int op)
 {
@@ -133,23 +134,23 @@ void exibirMapa()
 }
 void atualizarMapa(int mov)
 {
-    movimentoMonstros();
     if (mov == CIMA)
     {
-        if (pl > 0 && map[pl - 1][pc] == CAMINHO)
+        if (pl > 0 && map[pl - 1][pc] == CAMINHO || map[pl - 1][pc] == VIDA)
         {
             map[pl][pc] = CAMINHO;
             pl--;
             if (map[pl][pc] == VIDA)
             {
                 cvida++;
+                map[pl][pc] = BOMBERMAN;
             }
             map[pl][pc] = BOMBERMAN;
         }
     }
     else if (mov == BAIXO)
     {
-        if (pl < ALT - 1 && map[pl + 1][pc] == CAMINHO)
+        if (pl < ALT - 1 && map[pl + 1][pc] == CAMINHO || map[pl + 1][pc] == VIDA)
         {
             map[pl][pc] = CAMINHO;
             pl++;
@@ -162,30 +163,33 @@ void atualizarMapa(int mov)
     }
     else if (mov == ESQUERDA)
     {
-        if (pc > 0 && map[pl][pc - 1] == CAMINHO)
+        if (pc > 0 && map[pl][pc - 1] == CAMINHO || map[pl][pc - 1] == VIDA)
         {
             map[pl][pc] = CAMINHO;
             pc--;
             if (map[pl][pc] == VIDA)
             {
                 cvida++;
+                map[pl][pc] = BOMBERMAN;
             }
             map[pl][pc] = BOMBERMAN;
         }
     }
     else if (mov == DIREITA)
     {
-        if (pc < LAR - 1 && map[pl][pc + 1] == CAMINHO)
+        if (pc < LAR - 1 && map[pl][pc + 1] == CAMINHO || map[pl][pc + 1] == VIDA)
         {
             map[pl][pc] = CAMINHO;
             pc++;
             if (map[pl][pc] == VIDA)
             {
                 cvida++;
+                map[pl][pc] = BOMBERMAN;
             }
             map[pl][pc] = BOMBERMAN;
         }
     }
+    //movimentoMonstros();
     fflush(stdout);
     __fpurge(stdin);
 }
@@ -286,6 +290,10 @@ void editarMapa(int op)
             tab.mapa[cl][ca] = CURSOR;
         }
     }
+    else if (op == 115 || op == 83)
+    {
+        salvarMapa();
+    }
     else
     {
         aux = condicao(op);
@@ -332,25 +340,26 @@ int condicao(int op)
         cvida++;
         return VIDA;
     }
-    if (op == 115 || op == 83)
-    {
-        return 157;
-    }
+    
     return -1;
 }
 
 void salvarMapa()
 {
-    FILE *mapinhas = fopen("mapas.bin", "a+");
+    system("clear");
+    printf("🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱\n");
+    printf("🧱🧱  QUANTO  TEMPO  DESEJA?  🧱🧱\n");
+    printf("🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱\n");
+    printf("🧱🧱 DIGITE AQUI EM SEGUNDOS: 🧱🧱\n");
+    printf("🧱🧱 👉  ");
+    scanf("%li", &tab.tempo);
 
-    printf("\n\n\noi\n\n\n");
+    FILE *mapinhas = fopen("mapas.bin", "a+");
 
     tab.numVida = contagem(VIDA);
     tab.numMonstros = contagem(MONSTRO);
     tab.numRobo = contagem(ROBO);
     tab.numZumbi = contagem(ZUMBI);
-
-    printf("%i", tab.numRobo);
 
     fwrite(&tab, sizeof(Jogo), 1, mapinhas);
     fclose(mapinhas);
@@ -364,6 +373,7 @@ void salvarMapa()
     }
     ca = 1;
     cl = 1;
+    sair = 0;
 }
 int contagem(int cont)
 {
@@ -476,6 +486,70 @@ void movimentoMonstros()
         fflush(stdout);
         __fpurge(stdin);
     }
+}
+void carregarMapas(int op){
+    printf("6\n");
+
+    Jogo mapas[100];
+    int i = 0, socorro = 1;
+
+    FILE *mapinhas = fopen("mapas.bin", "r");
+    rewind(mapinhas);
+
+    if(mapinhas != NULL){
+        socorro = fread(&mapas, sizeof(Jogo), 5, mapinhas);
+        printf("%i\n", i);
+        i++;
+        
+        //printf("4\n");
+        for(int g = 0; g < 3; g++){
+            cbomb = 0;
+
+            for (int i = 0; i < ALT; i++)
+            {
+                for (int j = 0; j < LAR; j++)
+                {
+                    if (mapas[g].mapa[i][j] == PAREDE)
+                    {
+                        EMOJI_PARE
+                    }
+                    else if (mapas[g].mapa[i][j] == CAMINHO)
+                    {
+                        EMOJI_CAMI
+                    }
+                    else if (mapas[g].mapa[i][j] == ROBO)
+                    {
+                        EMOJI_ROBO
+                    }
+                    else if (mapas[g].mapa[i][j] == CURSOR)
+                    {
+                        EMOJI_CURS
+                    }
+                    else if (mapas[g].mapa[i][j] == ZUMBI)
+                    {
+                        EMOJI_ZUMB
+                    }
+                    else if (mapas[g].mapa[i][j] == MONSTRO)
+                    {
+                        EMOJI_MONS
+                    }
+                    else if (mapas[g].mapa[i][j] == BOMBERMAN)
+                    {
+                        EMOJI_BOM1
+                        cbomb = 1;
+                    }
+                    else if (mapas[g].mapa[i][j] == VIDA)
+                    {
+                        EMOJI_VIDA
+                    }
+                }
+                printf("\n");
+            }
+            printf("\n");
+        }
+        printf("%i",mapas[1].numRobo);
+    }
+
 }
 
 #endif
